@@ -3,7 +3,7 @@
     var ctx,
         width,
         height,
-        radius = 20,
+        radius = 10,
         angle = Math.PI / 3,
         hexWidth = (radius + Math.cos(angle) * radius)
                  - (Math.cos(Math.PI + angle) * radius),
@@ -13,10 +13,10 @@
         xHexes,
         yHexes,
         colors = [
-            "#FF0000",
-            "#00FF00",
-            "#0000FF",
-            "#FFFF00"
+            "#CC2222",
+            "#22CC22",
+            "#2222CC",
+            "#CCCC22"
         ];
     ;
 
@@ -31,10 +31,10 @@
         yHexes = height / ySpacing + 1;
     }
 
-    function drawHex(x, y) {
-        var startX = x + Math.cos(Math.PI + angle) * radius,
-            startY = y + Math.sin(Math.PI + angle) * radius,
-            color = colors[Math.floor(Math.random()*4)];
+    function drawHex(x, y, color) {
+        var offsetX = y % 2 === 0 ? xSpacing / 2 : 0,
+            startX = offsetX + x * xSpacing + Math.cos(Math.PI + angle) * radius,
+            startY = y * ySpacing + Math.sin(Math.PI + angle) * radius;
         ctx.beginPath();
         ctx.moveTo(startX, startY);
         ctx.lineTo(startX + radius, startY);
@@ -48,12 +48,13 @@
         ctx.fill();
     }
 
-    function drawHexes() {
-        var x, y, offsetX;
+    function drawColoredHexes() {
+        var x, y,
+            color;
         for (y = 0; y < yHexes; y++) {
-            offsetX = y % 2 === 0 ? xSpacing / 2 : 0;
             for (x = 0; x < xHexes; x++) {
-                drawHex(x * xSpacing + offsetX, y * ySpacing);
+                color = colors[Math.floor(Math.random() * 4)];
+                drawHex(x, y, color);
             }
         }
     }
@@ -61,9 +62,10 @@
     function run() {
         init();
 
-        drawHexes();
+        drawColoredHexes();
     }
 
     document.addEventListener("DOMContentLoaded", run);
+    document.addEventListener("click", drawColoredHexes);
 
 }());
