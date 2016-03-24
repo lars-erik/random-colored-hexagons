@@ -3,11 +3,16 @@
     var ctx,
         width,
         height,
-        radius = 10,
+        radius = 15,
         angle = Math.PI / 3,
         hexWidth = (radius + Math.cos(angle) * radius)
                  - (Math.cos(Math.PI + angle) * radius),
         hexHeight = Math.sin(angle) * radius * 2,
+        xInvDiag = Math.cos(Math.PI + angle) * radius,
+        yInvDiag = Math.sin(Math.PI + angle) * radius,
+        xDiag = Math.cos(angle) * radius,
+        yDiag = Math.sin(angle) * radius,
+        oddX,
         xSpacing,
         ySpacing,
         xHexes,
@@ -29,19 +34,20 @@
         ySpacing = hexHeight / 2;
         xHexes = width / xSpacing + 1;
         yHexes = height / ySpacing + 1;
+        oddX = xSpacing / 2;
     }
 
     function drawHex(x, y, color) {
-        var offsetX = y % 2 === 0 ? xSpacing / 2 : 0,
-            startX = offsetX + x * xSpacing + Math.cos(Math.PI + angle) * radius,
-            startY = y * ySpacing + Math.sin(Math.PI + angle) * radius;
+        var offsetX = y % 2 === 0 ? oddX : 0,
+            startX = offsetX + x * xSpacing + xInvDiag,
+            startY = y * ySpacing + yInvDiag;
         ctx.beginPath();
         ctx.moveTo(startX, startY);
         ctx.lineTo(startX + radius, startY);
-        ctx.lineTo(startX + radius + Math.cos(angle) * radius, startY + Math.sin(angle) * radius);
-        ctx.lineTo(startX + radius, startY + Math.sin(angle) * radius * 2);
-        ctx.lineTo(startX, startY + Math.sin(angle) * radius * 2);
-        ctx.lineTo(startX + Math.cos(Math.PI + angle) * radius, startY + Math.sin(angle) * radius);
+        ctx.lineTo(startX + radius + xDiag, startY + yDiag);
+        ctx.lineTo(startX + radius, startY + hexHeight);
+        ctx.lineTo(startX, startY + hexHeight);
+        ctx.lineTo(startX + xInvDiag, startY + yDiag);
         ctx.closePath();
         ctx.stroke();
         ctx.fillStyle = color;
